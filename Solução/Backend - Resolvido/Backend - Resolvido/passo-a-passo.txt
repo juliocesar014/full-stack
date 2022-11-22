@@ -1,0 +1,112 @@
+# Autor: Júlio César Agripino
+# Data: 13/11/2022
+
+-----------------------Documentação para criação de: Buckets/Lambda/DynamoDB----------------------------------
+				Amazon Web Service
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Objetivo:
+
+- Criar bucket e colocar arquivo CSV dentro
+- Criar Bucket nome: bucket-julio-s3
+- Tratar o arquvio CSV
+- Deixar apenas o importante
+
+- Criar função lambda para executar e ler 
+o arquivo CSV que está dentro da bucket
+- Criar lambda nome: lambda-s3
+- Criar código em Python para ler o arquivo
+- Executar o teste para ver se ele está lendo os dados do arquivo CSV
+
+3° Função lambda deverá salvar no banco de dados os arquivos do CSV
+- Criar um banco de dados no AWS para salvar os arquivo CSV em forma de tabela...
+- Executa o teste para ver se está gravando todas as informações da tabela CSV.
+
+- Levar para o Banco de Dados os dados do CSV em forma de tabela.
+
+#################PASSO A PASSO#########################
+
+1- Criar bucket na S3 (Aws)  
+	1.1 Nome bucket: 'bucket-julio-s3'
+	1.2 Não bloquear acesso público
+	1.3 Criar bucket
+	
+2- Configurar Banco de Dados (DynamoDB(Aws))
+	2.1 Criar tabela
+	2.2  Nome tabela: 'contratos'
+	2.3 Keys : 'id' and null....
+	2.4 Criar tabela
+
+3- Configurar IAM (Quem poderá ter acesso a serviços e recursos)
+	3.1 Criar política de gerenciamento(acesso e servicos)
+	3.2 Serviço: S3
+	3.3 Nivel de acesso: Leitura(Read) Todos
+	3.3 Nivel de recursos: Todos
+	3.4 Adicionar permissões adicionais: Serviço -> DynamoDB -> Todos
+	3.5 Nivel de recursos: Todos
+	3.6 Adicionar recurso: Cloudwatch Logs( Monitoramento de recursos do AWS - 
+					Permite centralizar os logs de todos os sistemas,
+					 aplicações e produtos da AWS que você usa em	
+					 um único serviço altamente escalável)
+	3.7 Nivel de recursos: Todos
+	3.8 Nome da politíca criada: csv-lambda
+
+4- Criar Funçoes (dentro do IAM)
+	4.1 Criar função
+	4.2 AWS - Lambda
+	4.3 Escolher nossa politica criada: csv-lambda
+	4.4 Nome da função lambda: lambda-s3
+	4.5 Criar função
+	
+
+5- Lambda
+	5.1 Criar função
+	5.2 Nome da função lambda: csv-lambda-s3
+	5.3 Versão: Python
+	5.4 Escolher função existente: lambda-s3 (Na qual criamos anteriormente)
+	5.5 Criar função
+	5.6 Adicionar um gatilho -> Origem: S3 -> Seleciona a bucket criada ->  Configurar de acordo com necessidades -> Pode escolher o metodo de atualizacao/.csv/.png....
+	5.7 Confirma - Adicionar
+
+6- CloudWatch - Logs
+	6.1 Grupos de Logs
+	6.2 Executa um teste na lambda para puder aparecer o logs de teste
+	6.3 Escolhe o log que foi criada = nome da função lambda : csv-lambda-s3
+	6.4 Irá informar o Output do teste
+
+7.1- Buckets - Propriedades
+	7.1.1 Notificações do evento
+	7.1.2 Qualquer evento que será efetuado na função lambda, será notificada.
+	
+	
+7.2- Buckets - Objeto
+	7.2.1 Upload do arquivo para a bucket
+	7.2.2 Automaticamente nos Logs de eventos, terá uma nova atualização e datetime.
+	7.2.3 Todo evento dentro da bucket será notificado no CloudWatch(Logs) - Upload de arquivos, Deletar arquivos....
+
+8- Código Lambda
+	8.1 Configurar teste evento (formato records do cloudwatch(Logs)
+	8.2 Alterar Json do evento
+	8.3 Preparar código Lambda
+	8.4 Lambda finalizado
+
+
+9- Banco de Dados recebendo todos os dados!
+
+
+
+
+
+
+
+
+
+
+
+#### Documentação Utilizada ####
+
+https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html#S3.Client.get_object
+https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html
+https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#table
+https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html#DynamoDB.Client.put_item
+
+
